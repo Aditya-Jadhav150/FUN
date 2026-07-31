@@ -1,186 +1,310 @@
+/* ==========================================
+   RESET & BASE
+   ========================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     font-family: 'Outfit', sans-serif;
-    background-color: #000;
+    background: #000;
     color: #fff;
-    overflow: hidden; /* Prevent scrolling on mobile */
+    overflow: hidden;
     height: 100vh;
+    height: 100dvh; /* dynamic viewport for mobile browsers */
     width: 100vw;
 }
 
-/* Landing Screen */
-.landing-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.screen {
+    position: fixed;
+    inset: 0;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(circle at center, #1a0b16 0%, #000000 100%);
-    z-index: 10;
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s, transform 0.8s ease;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    will-change: opacity;
 }
 
-.landing-container.hidden {
+.screen.hide {
     opacity: 0;
     visibility: hidden;
-    transform: scale(1.05);
+    pointer-events: none;
 }
 
+/* ==========================================
+   PHASE 1 — LANDING
+   ========================================== */
+.landing-screen {
+    background: radial-gradient(ellipse at 50% 40%, #1f0a1e 0%, #0a0011 60%, #000 100%);
+    z-index: 10;
+}
+
+/* Ambient floating hearts in landing background */
+.landing-bg-hearts {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.bg-heart {
+    position: absolute;
+    font-size: 22px;
+    opacity: 0.12;
+    animation: bgFloat 8s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -1s);
+    left: calc(var(--i) * 12.5%);
+    top: calc(40% + var(--i) * 5%);
+    will-change: transform, opacity;
+}
+
+@keyframes bgFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.08; }
+    25%      { transform: translateY(-40px) rotate(10deg); opacity: 0.15; }
+    50%      { transform: translateY(-20px) rotate(-5deg); opacity: 0.12; }
+    75%      { transform: translateY(-50px) rotate(8deg); opacity: 0.1; }
+}
+
+/* Glass Card */
 .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
-    padding: 40px 30px;
+    border-radius: 28px;
+    padding: 44px 32px;
     text-align: center;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    max-width: 90%;
+    max-width: 85%;
     width: 340px;
-    animation: float 6s ease-in-out infinite;
+    animation: cardEntry 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+    position: relative;
+    z-index: 2;
 }
 
-.heart-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-    animation: pulse 1.5s ease-in-out infinite;
+@keyframes cardEntry {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.heart-bounce {
+    font-size: 52px;
+    margin-bottom: 18px;
+    animation: heartbeat 1.2s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes heartbeat {
+    0%   { transform: scale(1); }
+    14%  { transform: scale(1.2); }
+    28%  { transform: scale(1); }
+    42%  { transform: scale(1.15); }
+    56%  { transform: scale(1); }
+    100% { transform: scale(1); }
 }
 
 .glass-card h1 {
-    font-size: 24px;
-    font-weight: 600;
+    font-family: 'Dancing Script', cursive;
+    font-size: 28px;
+    font-weight: 700;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, #ff7eb3 0%, #ff758c 100%);
+    background: linear-gradient(135deg, #ff9ec6 0%, #ff6f91 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: -0.5px;
 }
 
 .glass-card p {
-    font-size: 15px;
-    color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 32px;
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 28px;
+    letter-spacing: 0.5px;
 }
 
-/* Premium Button */
-.premium-btn {
+/* ==========================================
+   BUTTON — SHARED
+   ========================================== */
+.btn-glow {
     position: relative;
-    background: linear-gradient(135deg, #ff7eb3 0%, #ff758c 100%);
-    color: white;
+    background: linear-gradient(135deg, #ff7eb3 0%, #ff2d78 100%);
+    color: #fff;
     border: none;
-    border-radius: 100px;
-    padding: 16px 40px;
+    border-radius: 50px;
+    padding: 15px 42px;
     font-size: 16px;
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
     overflow: hidden;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
-    box-shadow: 0 8px 20px rgba(255, 117, 140, 0.3);
-    -webkit-tap-highlight-color: transparent;
+    box-shadow:
+        0 0 20px rgba(255, 45, 120, 0.35),
+        0 0 60px rgba(255, 45, 120, 0.15);
+    transition: transform 0.15s ease;
+    will-change: transform;
 }
 
-.premium-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 25px rgba(255, 117, 140, 0.4);
+.btn-glow:active {
+    transform: scale(0.93);
 }
 
-.premium-btn:active {
-    transform: scale(0.92);
-    box-shadow: 0 4px 10px rgba(255, 117, 140, 0.3);
-}
-
-.premium-btn span {
+.btn-glow span {
     position: relative;
     z-index: 1;
 }
 
-/* Button Glow Effect */
-.premium-btn::before {
+/* Shimmer sweep */
+.btn-glow::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transition: left 0.5s ease;
-    z-index: 0;
+    top: 0; left: -100%; bottom: 0;
+    width: 60%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    animation: shimmer 2.5s ease-in-out infinite;
+    will-change: left;
 }
 
-.premium-btn:hover::before {
-    left: 100%;
-    transition: left 0.5s ease;
+@keyframes shimmer {
+    0%   { left: -100%; }
+    50%  { left: 150%; }
+    100% { left: 150%; }
 }
 
-/* Canvas */
-#heartCanvas {
+/* ==========================================
+   PHASE 2 — HEARTS RAIN
+   ========================================== */
+.hearts-screen {
+    background: radial-gradient(ellipse at 50% 80%, #1a0015 0%, #000 100%);
+    z-index: 20;
+    overflow: hidden;
+}
+
+.hearts-container {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #000;
-    z-index: 1;
-    transition: background 1s ease;
-}
-
-#heartCanvas.show-pic {
-    background-color: transparent !important;
-    background-image: url('PIC.jpeg') !important;
-    background-repeat: no-repeat !important;
-    background-position: center center !important;
-    background-size: cover !important;
-}
-
-#nextBtn {
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hidden-btn {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(-50%) translateY(40px) scale(0.8) !important;
+    inset: 0;
+    overflow: hidden;
     pointer-events: none;
 }
 
-/* Ripple Animation */
-.ripple {
+/* Each falling heart */
+.falling-heart {
     position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.6);
-    transform: scale(0);
-    animation: ripple-animation 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 24px;
+    top: -40px;
+    animation: fall linear forwards;
+    will-change: transform;
     pointer-events: none;
 }
 
-@keyframes ripple-animation {
-    to {
-        transform: scale(4);
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(calc(100vh + 60px)) rotate(360deg) scale(0.6);
         opacity: 0;
     }
 }
 
-/* Animations */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
+/* Next Button positioning */
+.next-btn {
+    position: absolute;
+    bottom: 60px;
+    z-index: 25;
+    transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s ease;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    15% { transform: scale(1.15); }
-    30% { transform: scale(1); }
-    45% { transform: scale(1.15); }
-    60%, 100% { transform: scale(1); }
+.next-btn.hide {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(30px);
+    pointer-events: none;
+}
+
+/* ==========================================
+   PHASE 3 — PHOTO REVEAL
+   ========================================== */
+.photo-screen {
+    background: #000;
+    z-index: 30;
+    justify-content: center;
+    align-items: center;
+}
+
+.photo-wrapper {
+    position: relative;
+    max-width: 85%;
+    max-height: 60vh;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+        0 0 30px rgba(255, 100, 150, 0.2),
+        0 0 80px rgba(255, 50, 100, 0.1);
+    animation: photoReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.2s;
+}
+
+@keyframes photoReveal {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+    object-fit: contain;
+}
+
+.text-overlay {
+    margin-top: 28px;
+    animation: textFadeUp 1s ease both;
+    animation-delay: 0.8s;
+}
+
+@keyframes textFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.sorry-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 30px;
+    color: #ff8fbb;
+    text-shadow: 0 0 20px rgba(255, 100, 160, 0.5), 0 2px 4px rgba(0,0,0,0.8);
+    text-align: center;
+}
+
+/* Floating hearts around photo */
+.photo-hearts {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.ph {
+    position: absolute;
+    bottom: -40px;
+    left: var(--x);
+    font-size: 20px;
+    animation: floatUp 4s ease-in-out infinite;
+    animation-delay: var(--d);
+    will-change: transform;
+    opacity: 0.6;
+}
+
+@keyframes floatUp {
+    0%   { transform: translateY(0) scale(1); opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
 }
