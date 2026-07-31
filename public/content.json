@@ -1,0 +1,69 @@
+{
+  "scene1": {
+    "title": "Hey...",
+    "subtitle": "I made something special for you",
+    "buttonText": "Enter"
+  },
+  "scene2": {
+    "revealText": "Every beat is for you",
+    "buttonText": "Continue"
+  },
+  "scene3": {
+    "title": "Things I Love About You",
+    "cards": [
+      {
+        "front": "The way you smile",
+        "back": "It lights up my entire world, every single time"
+      },
+      {
+        "front": "Your laugh",
+        "back": "The sound I never want to stop hearing"
+      },
+      {
+        "front": "Every moment with you",
+        "back": "Even silence feels perfect when you're next to me"
+      },
+      {
+        "front": "The way you care",
+        "back": "You make everyone around you feel special"
+      }
+    ]
+  },
+  "scene4": {
+    "title": "Us",
+    "caption": "My favorite picture in the world",
+    "images": ["/gallery/PIC.jpeg"]
+  },
+  "scene5": {
+    "title": "Our Story",
+    "nodes": [
+      {
+        "label": "When we first met",
+        "detail": "I didn't know it then, but everything was about to change"
+      },
+      {
+        "label": "When I realized you're special",
+        "detail": "Something about you felt different from everyone else"
+      },
+      {
+        "label": "Every moment since",
+        "detail": "Each one more precious than the last"
+      },
+      {
+        "label": "Right now",
+        "detail": "Reading this, knowing how much you mean to me"
+      }
+    ]
+  },
+  "scene6": {
+    "question": "Can you forgive me?",
+    "choiceA": "Yes 💖",
+    "choiceB": "Maybe... 🤔",
+    "reactionText": "I knew you would 💕"
+  },
+  "scene7": {
+    "message": "Sorry, Manjusha",
+    "subtext": "I promise to be better, because you deserve the best",
+    "emoji": "💖"
+  }
+}

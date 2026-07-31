@@ -1,67 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Something special for someone special" />
     <title>For You 💖</title>
-    <meta name="description" content="Something special for someone special">
-    <link rel="stylesheet" href="styles.css?v=10">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-</head>
-<body>
-
-    <!-- PHASE 1: Landing Page -->
-    <div id="landing" class="screen landing-screen">
-        <div class="landing-bg-hearts" aria-hidden="true">
-            <span class="bg-heart" style="--i:0">💕</span>
-            <span class="bg-heart" style="--i:1">💗</span>
-            <span class="bg-heart" style="--i:2">💖</span>
-            <span class="bg-heart" style="--i:3">💓</span>
-            <span class="bg-heart" style="--i:4">💕</span>
-            <span class="bg-heart" style="--i:5">💗</span>
-            <span class="bg-heart" style="--i:6">💖</span>
-            <span class="bg-heart" style="--i:7">💓</span>
-        </div>
-        <div class="glass-card">
-            <div class="heart-bounce">💖</div>
-            <h1>I have something for you</h1>
-            <p>Tap below to see it</p>
-            <button id="startBtn" class="btn-glow" aria-label="Start">
-                <span>Click Me</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- PHASE 2: Hearts Rain Animation -->
-    <div id="heartsPhase" class="screen hearts-screen hide">
-        <div class="hearts-container" id="heartsContainer"></div>
-        <button id="nextBtn" class="btn-glow next-btn hide" aria-label="Next">
-            <span>Click here babe</span>
-        </button>
-    </div>
-
-    <!-- PHASE 3: Photo Reveal -->
-    <div id="photoPhase" class="screen photo-screen hide">
-        <div class="photo-wrapper">
-            <img src="PIC.jpeg" alt="Us" class="photo" id="photo">
-        </div>
-        <div class="text-overlay" id="textOverlay">
-            <p class="sorry-text">Sorry, Manjusha 💖</p>
-        </div>
-        <div class="photo-hearts" aria-hidden="true">
-            <span class="ph" style="--d:0s; --x:10%">💖</span>
-            <span class="ph" style="--d:0.5s; --x:25%">💕</span>
-            <span class="ph" style="--d:1s; --x:45%">💗</span>
-            <span class="ph" style="--d:1.5s; --x:65%">💓</span>
-            <span class="ph" style="--d:2s; --x:80%">💖</span>
-            <span class="ph" style="--d:0.3s; --x:90%">💕</span>
-            <span class="ph" style="--d:0.8s; --x:5%">💗</span>
-            <span class="ph" style="--d:1.3s; --x:55%">💓</span>
-            <span class="ph" style="--d:1.8s; --x:35%">💖</span>
-            <span class="ph" style="--d:2.2s; --x:72%">💕</span>
-        </div>
-    </div>
-
-    <script src="script.js?v=10"></script>
-</body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
