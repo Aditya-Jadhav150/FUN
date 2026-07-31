@@ -142,7 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cancelAnimationFrame(animationFrameId);
         
         document.body.style.backgroundImage = "url('PIC.jpeg')";
-        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundSize = "contain";
+        document.body.style.backgroundRepeat = "no-repeat";
         document.body.style.backgroundPosition = "center center";
         canvas.style.backgroundColor = "transparent";
         nextBtn.classList.add('hidden-btn');
