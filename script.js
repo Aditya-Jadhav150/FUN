@@ -86,8 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         draw(ctx) {
             ctx.save();
             ctx.fillStyle = this.color;
-            ctx.shadowColor = this.color;
-            ctx.shadowBlur = 15;
             
             ctx.beginPath();
             const topCurveHeight = this.size * 0.3;
@@ -121,8 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function animateHearts() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Add new particles occasionally
-        if (Math.random() < 0.2) {
+        // Add new particles occasionally (optimized spawn rate for mobile)
+        if (Math.random() < 0.08) {
             particles.push(new HeartParticle());
         }
 
