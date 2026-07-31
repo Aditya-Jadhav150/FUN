@@ -25,12 +25,14 @@ body {
     align-items: center;
     background: radial-gradient(circle at center, #1a0b16 0%, #000000 100%);
     z-index: 10;
-    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;
+    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s, filter 1s ease, transform 1s ease;
 }
 
 .landing-container.hidden {
     opacity: 0;
     visibility: hidden;
+    filter: blur(10px);
+    transform: scale(1.05);
 }
 
 .glass-card {
@@ -83,8 +85,9 @@ body {
     font-family: inherit;
     cursor: pointer;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
     box-shadow: 0 8px 20px rgba(255, 117, 140, 0.3);
+    -webkit-tap-highlight-color: transparent;
 }
 
 .premium-btn:hover {
@@ -93,7 +96,8 @@ body {
 }
 
 .premium-btn:active {
-    transform: translateY(1px);
+    transform: scale(0.92);
+    box-shadow: 0 4px 10px rgba(255, 117, 140, 0.3);
 }
 
 .premium-btn span {
@@ -139,10 +143,32 @@ body {
     background-size: cover !important;
 }
 
+#nextBtn {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .hidden-btn {
     opacity: 0;
     visibility: hidden;
+    transform: translateX(-50%) translateY(40px) scale(0.8) !important;
     pointer-events: none;
+}
+
+/* Ripple Animation */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple-animation 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
 }
 
 /* Animations */

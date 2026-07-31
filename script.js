@@ -15,6 +15,37 @@ document.addEventListener('DOMContentLoaded', () => {
     let animationStarted = false;
     let particles = [];
     let animationFrameId;
+
+    // Add ripple effect to all premium buttons
+    document.querySelectorAll('.premium-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            let ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            this.appendChild(ripple);
+            
+            // Calculate position for the ripple center
+            const rect = this.getBoundingClientRect();
+            // Fallback to center if touch coordinates aren't accurate
+            const x = e.clientX ? e.clientX - rect.left : rect.width / 2;
+            const y = e.clientY ? e.clientY - rect.top : rect.height / 2;
+            
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            
+            // The size should be large enough to cover the button
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = `${size}px`;
+            ripple.style.height = `${size}px`;
+            // Center the ripple element itself
+            ripple.style.transformOrigin = 'center center';
+            ripple.style.marginLeft = `-${size / 2}px`;
+            ripple.style.marginTop = `-${size / 2}px`;
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
     
     startBtn.addEventListener('click', () => {
         if (animationStarted) return;
