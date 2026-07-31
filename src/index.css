@@ -21,14 +21,12 @@ html, body {
   padding: 0;
   width: 100%;
   min-height: 100%;
-  overflow-x: hidden;
   background-color: var(--scene-secondary);
   color: var(--foreground);
   font-family: 'Outfit', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
-  overscroll-behavior: none;
 }
 
 /* Safe area padding for notches */

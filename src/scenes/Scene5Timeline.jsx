@@ -13,7 +13,7 @@ export default function Scene5Timeline({ content, sceneColors, onComplete }) {
     setVisitedNodes(prev => new Set(prev).add(index));
   };
 
-  const allVisited = visitedNodes.size === nodes.length && nodes.length > 0;
+  // Removed allVisited requirement
 
   return (
     <div 
@@ -109,27 +109,23 @@ export default function Scene5Timeline({ content, sceneColors, onComplete }) {
         </div>
       </div>
 
-      {/* Continue Button */}
-      <AnimatePresence>
-        {allVisited && (
-          <motion.button
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            onClick={onComplete}
-            className="relative mt-12 z-40 px-10 py-4 rounded-full font-bold text-lg tracking-wider shadow-2xl"
-            style={{ 
-              backgroundColor: sceneColors?.accent || '#fff',
-              color: '#ffffff',
-              boxShadow: `0 0 30px ${sceneColors?.glow || sceneColors?.accent || '#fff'}`
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Continue Journey
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Floating Continue Button */}
+      <motion.button
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 2, type: "spring" }}
+        onClick={onComplete}
+        className="fixed bottom-8 right-8 md:bottom-12 md:right-12 z-50 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg tracking-wider shadow-2xl flex items-center gap-2"
+        style={{ 
+          backgroundColor: sceneColors?.accent || '#fff',
+          color: '#ffffff',
+          boxShadow: `0 8px 32px ${sceneColors?.glow || sceneColors?.accent || '#fff'}80`
+        }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        Continue &rarr;
+      </motion.button>
     </div>
   );
 }
