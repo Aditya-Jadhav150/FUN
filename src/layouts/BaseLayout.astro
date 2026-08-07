@@ -1,0 +1,41 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Astro 5 Showcase | High Performance Web Experience',
+  description = 'An ultra-fast, accessible, content-driven web experience built with Astro 5, Tailwind CSS v4, and Web Interface Guidelines.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#08040e" />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body class="bg-[#08040e] text-white min-h-screen flex flex-col selection:bg-sky-500 selection:text-slate-950">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <slot name="header" />
+    
+    <main id="main-content" class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <slot />
+    </main>
+    
+    <slot name="footer" />
+  </body>
+</html>

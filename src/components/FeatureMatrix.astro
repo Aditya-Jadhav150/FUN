@@ -1,0 +1,69 @@
+---
+const FEATURES = [
+  {
+    icon: '🏝️',
+    title: 'Astro 5 Islands Architecture',
+    tag: 'SSG & SSR',
+    description: 'Renders static HTML by default. Hydrates interactive UI components on-demand using client directives like client:load and client:visible.',
+    highlights: ['Zero JavaScript payload by default', 'Content Collection type-safety', 'Vercel static deploy ready']
+  },
+  {
+    icon: '⚡',
+    title: 'Tailwind CSS v4 Engine',
+    tag: 'Next-Gen Utility',
+    description: 'Configured with `@tailwindcss/vite` and `@import "tailwindcss"`. Utilizes modern CSS custom properties, theme tokens, and dynamic color scales.',
+    highlights: ['Zero-config theme variables', 'Native CSS container queries', 'Built-in dark mode scales']
+  },
+  {
+    icon: '♿',
+    title: 'Web Interface Guidelines',
+    tag: 'Accessibility 100%',
+    description: 'Strict adherence to Vercel Web Interface Guidelines. Accessible keyboard focus states, semantic HTML5 landmarks, and prefers-reduced-motion support.',
+    highlights: ['Focus-visible rings', 'Semantic heading hierarchy', 'Keyboard navigable UI']
+  }
+];
+---
+
+<section id="features" class="py-20 border-t border-white/10 scroll-margin-top">
+  <div class="text-center max-w-3xl mx-auto mb-16">
+    <span class="text-xs uppercase tracking-widest text-sky-400 font-mono">Architectural Pillars</span>
+    <h2 class="text-4xl sm:text-5xl font-serif italic text-cyan-gradient mt-2 mb-4">
+      Built with Industry Standards
+    </h2>
+    <p class="text-slate-300 font-light text-base sm:text-lg">
+      Every line of code follows modern frontend engineering best practices for maximum speed, accessibility, and elegance.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    {FEATURES.map((feat) => (
+      <article class="glass-panel-cyan p-8 rounded-3xl border border-sky-400/20 shadow-xl flex flex-col justify-between group hover:border-sky-400/50 transition-colors">
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <span class="text-4xl group-hover:scale-110 transition-transform">{feat.icon}</span>
+            <span class="px-3 py-1 rounded-full text-xs font-mono bg-sky-500/10 text-sky-300 border border-sky-400/30">
+              {feat.tag}
+            </span>
+          </div>
+
+          <h3 class="text-2xl font-serif italic text-white mb-3">
+            {feat.title}
+          </h3>
+
+          <p class="text-slate-300 text-sm font-light leading-relaxed mb-6">
+            {feat.description}
+          </p>
+        </div>
+
+        <ul class="space-y-2 pt-6 border-t border-white/10 text-xs font-mono text-slate-300">
+          {feat.highlights.map((item) => (
+            <li class="flex items-center gap-2">
+              <span class="text-sky-400">✓</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </article>
+    ))}
+  </div>
+</section>

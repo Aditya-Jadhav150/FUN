@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import FeatureMatrix from '../components/FeatureMatrix.astro';
+import InteractiveTerminal from '../components/InteractiveTerminal.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Astro 5 Showcase | High Performance Web Experience"
+  description="An ultra-fast, accessible web experience built with Astro 5, Tailwind CSS v4, and Web Interface Guidelines."
+>
+  <Navbar slot="header" />
+  
+  <Hero />
+  <FeatureMatrix />
+  <InteractiveTerminal />
+  
+  <Footer slot="footer" />
+</BaseLayout>
