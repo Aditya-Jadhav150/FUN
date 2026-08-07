@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback, lazy, Suspense } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import TouchRipple from './components/TouchRipple'
 import Background from './components/Background'
+import AudioToggle from './components/AudioToggle'
 
-// Lazy load scenes for code splitting
+// Lazy load scenes for performance
 const Scene1Welcome = lazy(() => import('./scenes/Scene1Welcome'))
 const Scene2Mystery = lazy(() => import('./scenes/Scene2Mystery'))
 const Scene3Cards = lazy(() => import('./scenes/Scene3Cards'))
@@ -12,15 +13,15 @@ const Scene5Timeline = lazy(() => import('./scenes/Scene5Timeline'))
 const Scene6Choices = lazy(() => import('./scenes/Scene6Choices'))
 const Scene7Message = lazy(() => import('./scenes/Scene7Message'))
 
-// Scene color palettes — transitions from deep violet → royal blue → warm rose/gold
+// Scene color palettes — transitions from deep midnight velvet → champagne rose
 const SCENE_COLORS = [
-  { primary: '#2d1b69', secondary: '#1a0b3e', accent: '#8b5cf6', glow: '#7c3aed' },  // Scene 1 - Deep Violet
-  { primary: '#1e1b4b', secondary: '#0f0b2e', accent: '#818cf8', glow: '#6366f1' },  // Scene 2 - Indigo
-  { primary: '#172554', secondary: '#0c1a3d', accent: '#60a5fa', glow: '#3b82f6' },  // Scene 3 - Royal Blue
-  { primary: '#1e3a5f', secondary: '#0c2340', accent: '#38bdf8', glow: '#0ea5e9' },  // Scene 4 - Sky Blue
-  { primary: '#3b1f5b', secondary: '#2a1245', accent: '#c084fc', glow: '#a855f7' },  // Scene 5 - Purple
-  { primary: '#4a1942', secondary: '#2d0f29', accent: '#f472b6', glow: '#ec4899' },  // Scene 6 - Rose
-  { primary: '#4a1530', secondary: '#2d0a1c', accent: '#fb7185', glow: '#f43f5e' },  // Scene 7 - Warm Rose/Gold
+  { primary: '#0a0512', secondary: '#12091f', accent: '#fb7185', glow: 'rgba(251,113,133,0.4)' },
+  { primary: '#0f0518', secondary: '#180a27', accent: '#f43f5e', glow: 'rgba(244,63,94,0.45)' },
+  { primary: '#14051a', secondary: '#1f0927', accent: '#e11d48', glow: 'rgba(225,29,72,0.4)' },
+  { primary: '#1a0516', secondary: '#270921', accent: '#fb7185', glow: 'rgba(251,113,133,0.4)' },
+  { primary: '#12051a', secondary: '#1d0929', accent: '#f472b6', glow: 'rgba(244,114,182,0.4)' },
+  { primary: '#1f0518', secondary: '#2e0924', accent: '#fb7185', glow: 'rgba(251,113,133,0.45)' },
+  { primary: '#27051a', secondary: '#3a0927', accent: '#fda4af', glow: 'rgba(253,164,175,0.5)' },
 ]
 
 const SCENES = [
@@ -35,7 +36,7 @@ const SCENES = [
 
 function LoadingScreen() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-[#0a0512] z-50">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -44,18 +45,18 @@ function LoadingScreen() {
       >
         <motion.div
           animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          className="text-5xl mb-4"
+          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          className="text-6xl mb-4 drop-shadow-[0_0_25px_rgba(251,113,133,0.6)]"
         >
           💖
         </motion.div>
         <motion.p
           initial={{ opacity: 0 }}
-          animate={{ opacity: [0.3, 1, 0.3] }}
+          animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="text-white/50 text-sm tracking-widest uppercase"
+          className="text-rose-200/70 text-xs font-light tracking-[0.2em] uppercase"
         >
-          Loading something special...
+          Preparing something special…
         </motion.p>
       </motion.div>
     </div>
@@ -67,14 +68,13 @@ export default function App() {
   const [currentScene, setCurrentScene] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Load content from JSON
+  // Fetch content from JSON
   useEffect(() => {
     fetch('/content.json')
       .then(res => res.json())
       .then(data => {
         setContent(data)
-        // Simulate minimum loading time for the intro feel
-        setTimeout(() => setIsLoading(false), 2000)
+        setTimeout(() => setIsLoading(false), 1400)
       })
       .catch(err => {
         console.error('Failed to load content:', err)
@@ -96,21 +96,24 @@ export default function App() {
   const currentContent = content[contentKeys[currentScene]]
 
   return (
-    <div className="relative min-h-screen bg-black">
-      {/* Animated Background */}
+    <main className="relative min-h-screen bg-[#0a0512] overflow-x-hidden selection:bg-rose-500 selection:text-white">
+      {/* Audio Ambient Control */}
+      <AudioToggle />
+
+      {/* Animated 3D Background */}
       <Background colorScheme={currentColors} />
 
-      {/* Touch Ripple Effect */}
+      {/* Touch Ripple Visual FX */}
       <TouchRipple color={currentColors.accent} />
 
-      {/* Scene Container */}
+      {/* Scene Crossfade Container */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentScene}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.02 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10 min-h-screen"
         >
           <Suspense fallback={<LoadingScreen />}>
@@ -123,20 +126,27 @@ export default function App() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Scene Progress Dots */}
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex gap-1.5">
+      {/* Scene Progress Indicator */}
+      <nav aria-label="Progress dots" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 flex gap-2 p-2 rounded-full glass-panel-romantic">
         {SCENES.map((_, i) => (
-          <motion.div
+          <button
+            type="button"
             key={i}
-            className="w-1.5 h-1.5 rounded-full"
-            animate={{
-              backgroundColor: i === currentScene ? currentColors.accent : 'rgba(255,255,255,0.2)',
-              scale: i === currentScene ? 1.3 : 1,
-            }}
-            transition={{ duration: 0.3 }}
-          />
+            aria-label={`Go to scene ${i + 1}`}
+            onClick={() => setCurrentScene(i)}
+            className="w-2 h-2 rounded-full focus-visible:ring-1 focus-visible:ring-rose-400 p-0 border-none outline-none cursor-pointer"
+          >
+            <motion.div
+              className="w-full h-full rounded-full"
+              animate={{
+                backgroundColor: i === currentScene ? '#fb7185' : 'rgba(255,255,255,0.2)',
+                scale: i === currentScene ? 1.4 : 1,
+              }}
+              transition={{ duration: 0.3 }}
+            />
+          </button>
         ))}
-      </div>
-    </div>
+      </nav>
+    </main>
   )
 }

@@ -1,9 +1,9 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 export default function Scene1Welcome({ content, sceneColors, onComplete }) {
-  const { title = "Welcome", subtitle = "To the experience", buttonText = "Enter" } = content || {};
-  
+  const { title = "Hey...", subtitle = "I made something special for you", buttonText = "Enter" } = content || {};
+
   const titleWords = title.split(' ');
   const subtitleChars = subtitle.split('');
 
@@ -11,15 +11,13 @@ export default function Scene1Welcome({ content, sceneColors, onComplete }) {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
+      transition: { staggerChildren: 0.12 },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { opacity: 0, y: 24, filter: 'blur(8px)' },
+    visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
   };
 
   const subtitleVariants = {
@@ -27,8 +25,8 @@ export default function Scene1Welcome({ content, sceneColors, onComplete }) {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05,
-        delayChildren: titleWords.length * 0.1 + 0.5,
+        staggerChildren: 0.04,
+        delayChildren: titleWords.length * 0.12 + 0.4,
       },
     },
   };
@@ -39,38 +37,42 @@ export default function Scene1Welcome({ content, sceneColors, onComplete }) {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[100dvh] w-full overflow-y-auto bg-black text-white px-4 pb-20">
-      {/* Glowing orb */}
+    <div className="relative flex flex-col items-center justify-center min-h-[100dvh] w-full px-6 text-center select-none">
+      {/* Central Pulsing Heart Aura */}
       <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[100px] opacity-50 mix-blend-screen"
-        style={{ width: '40vw', height: '40vw', backgroundColor: sceneColors?.glow || '#3b82f6' }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full blur-[100px] pointer-events-none opacity-40"
+        style={{ backgroundColor: sceneColors?.glow || '#fb7185' }}
         animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.6, 0.3],
+          scale: [1, 1.25, 1],
+          opacity: [0.35, 0.6, 0.35],
         }}
         transition={{
-          duration: 4,
+          duration: 4.5,
           repeat: Infinity,
           ease: "easeInOut",
         }}
       />
 
       <motion.div
-        className="relative z-10 flex flex-col items-center text-center"
+        className="relative z-10 flex flex-col items-center max-w-xl"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 flex flex-wrap justify-center gap-x-4">
+        <motion.div variants={itemVariants} className="text-4xl mb-4 animate-float-gentle">
+          ✨
+        </motion.div>
+
+        <h1 className="text-6xl md:text-8xl font-serif italic tracking-tight mb-6 flex flex-wrap justify-center gap-x-4">
           {titleWords.map((word, i) => (
-            <motion.span key={i} variants={itemVariants} style={{ color: sceneColors?.accent || '#ffffff' }}>
+            <motion.span key={i} variants={itemVariants} className="text-rose-gradient drop-shadow-lg">
               {word}
             </motion.span>
           ))}
         </h1>
 
         <motion.div
-          className="text-xl md:text-2xl font-light mb-12 flex flex-wrap justify-center text-white/80"
+          className="text-lg md:text-2xl font-light text-slate-300 tracking-wide mb-14 flex flex-wrap justify-center max-w-md"
           variants={subtitleVariants}
           initial="hidden"
           animate="visible"
@@ -83,26 +85,24 @@ export default function Scene1Welcome({ content, sceneColors, onComplete }) {
         </motion.div>
 
         <motion.button
+          type="button"
           onClick={onComplete}
-          className="px-8 py-3 rounded-full font-medium text-lg uppercase tracking-wider relative group overflow-hidden mt-8"
-          style={{ 
-            backgroundColor: sceneColors?.accent || '#8b5cf6',
-            boxShadow: `0 0 20px ${sceneColors?.glow || '#3b82f6'}40`
-          }}
+          aria-label={buttonText}
+          className="px-12 py-4 rounded-full font-medium text-lg tracking-wider text-white glass-panel-romantic shadow-[0_0_30px_rgba(251,113,133,0.3)] hover:shadow-[0_0_45px_rgba(251,113,133,0.6)] transition-all flex items-center gap-3 group focus-visible:ring-2 focus-visible:ring-rose-400"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 2.5, duration: 0.8 }}
+          transition={{ delay: 2.2, duration: 0.8 }}
+          whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <motion.div
-            className="absolute inset-0 z-0 opacity-50"
-            style={{ backgroundColor: sceneColors?.primary || '#3b82f6' }}
-            animate={{ opacity: [0.2, 0.5, 0.2] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <span className="relative z-10 text-white" style={{ color: '#ffffff' }}>
-            {buttonText}
-          </span>
+          <span className="text-rose-200">{buttonText}</span>
+          <motion.span
+            animate={{ x: [0, 4, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            className="text-rose-400 group-hover:translate-x-1 transition-transform"
+          >
+            &rarr;
+          </motion.span>
         </motion.button>
       </motion.div>
     </div>

@@ -2,145 +2,87 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Scene4Gallery({ content, sceneColors, onComplete }) {
+  const { title = "Us", caption = "My favorite picture in the world", images = ["/gallery/PIC.jpeg"] } = content || {};
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Fallback content in case props are missing
-  const title = content?.title || "A Special Moment";
-  const image = content?.images?.[0] || "";
-  const caption = content?.caption || "A beautiful memory.";
+  const photoSrc = images[0] || "/gallery/PIC.jpeg";
 
   return (
-    <div 
-      className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center py-12 px-6 overflow-y-auto text-white pb-20" 
-      style={{ backgroundColor: '#000' }}
-    >
-      {/* Floating Hearts */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {Array.from({ length: 8 }).map((_, i) => {
-          const leftPos = Math.random() * 90;
-          const delay = Math.random() * 5;
-          const duration = Math.random() * 4 + 6;
-          return (
-            <motion.span
-              key={i}
-              initial={{ y: '100vh', opacity: 0, x: `${leftPos}vw` }}
-              animate={{
-                y: '-20vh',
-                opacity: [0, 1, 1, 0],
-              }}
-              transition={{
-                duration: duration,
-                repeat: Infinity,
-                delay: delay,
-                ease: "linear"
-              }}
-              className="absolute bottom-0 text-3xl"
-              style={{ x: `${leftPos}vw` }}
-            >
-              ❤️
-            </motion.span>
-          );
-        })}
-      </div>
-
-      {/* Title */}
+    <div className="relative flex flex-col items-center justify-center min-h-[100dvh] w-full px-6 py-12 select-none">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-3xl md:text-5xl font-bold text-center z-10"
-        style={{ color: sceneColors?.accent || '#fff' }}
+        className="text-4xl md:text-5xl font-serif italic text-rose-gradient text-center mb-8 z-10"
       >
         {title}
       </motion.h2>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full my-8 z-10">
-        <motion.div
-          layoutId="gallery-photo"
-          className="cursor-pointer relative rounded-2xl overflow-hidden"
-          style={{ 
-            boxShadow: `0 0 25px ${sceneColors?.glow || sceneColors?.accent || 'rgba(255,255,255,0.5)'}` 
-          }}
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.5 }}
-          onClick={() => setIsExpanded(true)}
-        >
-          <motion.img 
-            src={image} 
-            alt="Gallery focus" 
-            className="w-[85vw] md:w-auto max-h-[50vh] object-contain rounded-2xl block pointer-events-none"
-          />
-        </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }}
-          className="mt-8 text-lg md:text-xl text-center max-w-md px-4 font-medium leading-relaxed drop-shadow-md text-white/80"
-        >
-          {caption}
-        </motion.p>
-      </div>
-
-      {/* Continue Button */}
-      <motion.button
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.5 }}
-        onClick={onComplete}
-        className="z-10 px-8 py-3 rounded-full font-semibold text-lg tracking-wider shadow-lg mt-8"
-        style={{ 
-          backgroundColor: sceneColors?.accent || '#fff',
-          color: '#ffffff'
-        }}
-        whileTap={{ scale: 0.95 }}
+      {/* Polaroid Frame Container */}
+      <motion.div
+        className="relative z-10 max-w-sm w-full p-4 pb-6 bg-slate-900/90 backdrop-blur-2xl rounded-3xl border border-rose-300/30 shadow-[0_20px_50px_rgba(0,0,0,0.8)] cursor-pointer group"
+        initial={{ opacity: 0, scale: 0.88, rotate: -2 }}
+        animate={{ opacity: 1, scale: 1, rotate: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        whileHover={{ scale: 1.02, rotate: 1 }}
+        onClick={() => setIsExpanded(true)}
       >
-        Continue
-      </motion.button>
+        {/* Glowing Photo Backlight */}
+        <div className="absolute inset-0 rounded-3xl bg-rose-500/20 blur-xl group-hover:bg-rose-400/30 transition-colors pointer-events-none" />
 
-      {/* Expanded View Modal */}
+        <div className="relative overflow-hidden rounded-2xl aspect-[4/5] bg-black/40 mb-4">
+          <img
+            src={photoSrc}
+            alt="Us"
+            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+        </div>
+
+        <p className="font-serif italic text-center text-lg text-rose-100 px-2">
+          "{caption}"
+        </p>
+      </motion.div>
+
+      {/* Lightbox Modal */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex flex-col items-center justify-center p-6"
             onClick={() => setIsExpanded(false)}
           >
             <motion.div
-              layoutId="gallery-photo"
-              className="relative rounded-2xl overflow-hidden w-full max-w-4xl mx-auto flex items-center justify-center"
-              style={{ 
-                boxShadow: `0 0 50px ${sceneColors?.glow || sceneColors?.accent || 'rgba(255,255,255,0.5)'}` 
-              }}
-              drag="y"
-              dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={0.8}
-              onDragEnd={(e, info) => {
-                if (Math.abs(info.offset.y) > 100) {
-                  setIsExpanded(false);
-                }
-              }}
-              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              className="relative max-w-2xl max-h-[80vh] w-full h-full flex items-center justify-center"
             >
-              <img 
-                src={image} 
-                alt="Gallery Expanded view" 
-                className="w-full h-auto max-h-[85vh] object-contain block pointer-events-none"
+              <img
+                src={photoSrc}
+                alt="Us Expanded"
+                className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl border border-rose-300/30"
               />
-              <button 
-                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors"
-                onClick={() => setIsExpanded(false)}
-              >
-                ✕
-              </button>
             </motion.div>
+            <p className="text-white/70 text-sm mt-4 tracking-widest uppercase">Tap anywhere to close</p>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <motion.button
+        type="button"
+        onClick={onComplete}
+        className="mt-10 px-10 py-4 rounded-full font-medium text-lg tracking-wider text-white glass-panel-romantic shadow-[0_0_30px_rgba(251,113,133,0.4)] hover:shadow-[0_0_45px_rgba(251,113,133,0.7)] transition-all z-20 focus-visible:ring-2 focus-visible:ring-rose-400"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.8 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        Continue &rarr;
+      </motion.button>
     </div>
   );
 }

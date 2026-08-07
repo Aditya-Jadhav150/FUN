@@ -2,141 +2,114 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Scene3Cards({ content, sceneColors, onComplete }) {
-  const { title = "Discover", cards = [], buttonText = "Continue" } = content || {};
+  const { title = "Things I Love About You", cards = [] } = content || {};
   const [flippedCards, setFlippedCards] = useState(new Set());
-  const [allFlippedOnce, setAllFlippedOnce] = useState(false);
+  const [hasInteractedAll, setHasInteractedAll] = useState(false);
 
-  // Default cards if none provided
   const displayCards = cards.length === 4 ? cards : [
-    { id: 1, front: "?", back: "Memory 1" },
-    { id: 2, front: "?", back: "Memory 2" },
-    { id: 3, front: "?", back: "Memory 3" },
-    { id: 4, front: "?", back: "Memory 4" },
+    { front: "The way you smile", back: "It lights up my entire world, every single time" },
+    { front: "Your laugh", back: "The sound I never want to stop hearing" },
+    { front: "Every moment with you", back: "Even silence feels perfect when you're next to me" },
+    { front: "The way you care", back: "You make everyone around you feel special" }
   ];
 
   const handleCardTap = (index) => {
     setFlippedCards(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
       } else {
-        newSet.add(index);
+        next.add(index);
       }
-      return newSet;
+      return next;
     });
   };
 
-  // Track if all cards have been flipped at least once
-  const [flippedHistory, setFlippedHistory] = useState(new Set());
-  
   useEffect(() => {
-    setFlippedHistory(prev => {
-      const newHistory = new Set(prev);
-      flippedCards.forEach(val => newHistory.add(val));
-      if (newHistory.size === 4 && !allFlippedOnce) {
-        setAllFlippedOnce(true);
-      }
-      return newHistory;
-    });
-  }, [flippedCards, allFlippedOnce]);
+    if (flippedCards.size === displayCards.length) {
+      setHasInteractedAll(true);
+    }
+  }, [flippedCards, displayCards.length]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[100dvh] w-full bg-black text-white px-6 py-12 overflow-y-auto overflow-x-hidden pb-20">
-      {/* Background elements */}
-      <div 
-        className="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full blur-[120px] opacity-30 pointer-events-none"
-        style={{ backgroundColor: sceneColors?.glow || '#8b5cf6' }}
-      />
-      <div 
-        className="fixed bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] rounded-full blur-[100px] opacity-20 pointer-events-none"
-        style={{ backgroundColor: sceneColors?.secondary || '#3b82f6' }}
-      />
-
-      <motion.h2 
-        className="text-3xl md:text-5xl font-bold text-center mb-12 mt-8 z-10"
-        style={{ color: sceneColors?.accent || '#ffffff' }}
+    <div className="relative flex flex-col items-center justify-center min-h-[100dvh] w-full px-6 py-12 select-none">
+      <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        className="text-4xl md:text-5xl font-serif italic text-rose-gradient text-center mb-10 z-10"
       >
         {title}
       </motion.h2>
 
-      <div className="grid grid-cols-2 gap-4 md:gap-8 w-full max-w-2xl z-10 mb-16 perspective-1000">
+      <div className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-xl z-10 mb-12 [perspective:1000px]">
         {displayCards.slice(0, 4).map((card, index) => {
           const isFlipped = flippedCards.has(index);
-          
+
           return (
-            <motion.div
+            <motion.button
+              type="button"
               key={index}
-              className="relative w-full aspect-[3/4] cursor-pointer"
+              aria-label={`Memory card ${index + 1}: ${card.front}`}
+              className="relative w-full aspect-[4/5] cursor-pointer rounded-2xl border-none outline-none focus-visible:ring-2 focus-visible:ring-rose-400 bg-transparent"
               style={{ transformStyle: 'preserve-3d' }}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ 
-                opacity: 1, 
-                y: [0, -5, 5, 0],
+              initial={{ opacity: 0, y: 40 }}
+              animate={{
+                opacity: 1,
+                y: 0,
                 rotateY: isFlipped ? 180 : 0
               }}
-              transition={{ 
-                y: { duration: 4 + index, repeat: Infinity, ease: "easeInOut" },
-                rotateY: { duration: 0.6, type: "spring", stiffness: 200, damping: 20 },
-                opacity: { duration: 0.6, delay: index * 0.1 }
+              transition={{
+                rotateY: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                opacity: { duration: 0.5, delay: index * 0.1 }
               }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => handleCardTap(index)}
             >
-              {/* Front of card */}
-              <div 
-                className="absolute inset-0 w-full h-full backface-hidden rounded-2xl p-6 flex flex-col items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl"
+              {/* Card Front */}
+              <div
+                className="absolute inset-0 w-full h-full rounded-2xl p-5 flex flex-col items-center justify-center glass-panel-romantic shadow-xl text-center border border-white/20"
                 style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
               >
-                <div 
-                  className="text-4xl md:text-6xl font-light text-center text-white/80"
-                >
+                <span className="text-3xl mb-3">💌</span>
+                <p className="text-lg md:text-xl font-medium text-rose-100 leading-snug">
                   {card.front}
-                </div>
+                </p>
+                <span className="text-xs text-rose-300/70 uppercase tracking-widest mt-4">Tap to reveal</span>
               </div>
 
-              {/* Back of card */}
-              <div 
-                className="absolute inset-0 w-full h-full backface-hidden rounded-2xl p-6 flex flex-col items-center justify-center bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl"
-                style={{ 
-                  backfaceVisibility: 'hidden', 
+              {/* Card Back */}
+              <div
+                className="absolute inset-0 w-full h-full rounded-2xl p-5 flex flex-col items-center justify-center glass-panel bg-rose-950/60 shadow-2xl text-center border border-rose-400/30"
+                style={{
+                  backfaceVisibility: 'hidden',
                   WebkitBackfaceVisibility: 'hidden',
                   transform: 'rotateY(180deg)'
                 }}
               >
-                <div 
-                  className="text-xl md:text-2xl font-medium text-center text-white"
-                  style={{ color: '#ffffff' }}
-                >
-                  {card.back}
-                </div>
+                <p className="text-sm md:text-base font-light text-rose-100 leading-relaxed">
+                  "{card.back}"
+                </p>
+                <span className="text-xs text-amber-200/80 mt-3 font-serif italic">💖</span>
               </div>
-            </motion.div>
+            </motion.button>
           );
         })}
       </div>
 
-      <AnimatePresence>
-        {allFlippedOnce && (
-          <motion.button
-            onClick={onComplete}
-            className="px-10 py-4 rounded-full font-semibold text-lg tracking-wider z-20 mt-8"
-            style={{ 
-              backgroundColor: sceneColors?.accent || '#8b5cf6',
-              color: '#ffffff',
-              boxShadow: `0 8px 32px ${sceneColors?.glow || '#8b5cf6'}60`
-            }}
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          >
-            {buttonText}
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Floating Continue Action */}
+      <motion.button
+        type="button"
+        onClick={onComplete}
+        className="px-10 py-4 rounded-full font-medium text-lg tracking-wider text-white glass-panel-romantic shadow-[0_0_30px_rgba(251,113,133,0.4)] hover:shadow-[0_0_45px_rgba(251,113,133,0.7)] transition-all z-20 focus-visible:ring-2 focus-visible:ring-rose-400"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.8 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        Continue &rarr;
+      </motion.button>
     </div>
   );
 }
