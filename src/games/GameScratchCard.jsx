@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function GameScratchCard({ onComplete }) {
   const canvasRef = useRef(null);
-  const [isScratched, setIsScratched] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
   const [scratchPercent, setScratchPercent] = useState(0);
 
   useEffect(() => {
@@ -30,15 +30,15 @@ export default function GameScratchCard({ onComplete }) {
 
   const scratch = (x, y) => {
     const canvas = canvasRef.current;
-    if (!canvas || isScratched) return;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
     ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
-    ctx.arc(x, y, 24, 0, Math.PI * 2);
+    ctx.arc(x, y, 26, 0, Math.PI * 2);
     ctx.fill();
 
-    // Check scratched percentage
+    // Calculate scratched percentage
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let transparent = 0;
     for (let i = 3; i < imageData.data.length; i += 4) {
@@ -47,8 +47,8 @@ export default function GameScratchCard({ onComplete }) {
     const percent = Math.round((transparent / (canvas.width * canvas.height)) * 100);
     setScratchPercent(percent);
 
-    if (percent > 45) {
-      setIsScratched(true);
+    if (percent > 40) {
+      setIsUnlocked(true);
     }
   };
 
@@ -75,7 +75,7 @@ export default function GameScratchCard({ onComplete }) {
         </p>
       </div>
 
-      {/* Scratch Ticket Container */}
+      {/* Scratch Ticket Container (Uncovered & Fully Visible) */}
       <div className="relative max-w-sm w-full h-[260px] rounded-3xl glass-panel-romantic p-3 flex flex-col items-center justify-center border border-rose-300/40 shadow-2xl my-auto z-10 overflow-hidden">
         {/* Hidden Secret Message Underneath */}
         <div className="absolute inset-4 rounded-2xl bg-rose-950/90 flex flex-col items-center justify-center p-6 text-center z-0 border border-rose-400/30">
@@ -93,28 +93,19 @@ export default function GameScratchCard({ onComplete }) {
           ref={canvasRef}
           onMouseMove={handlePointerMove}
           onTouchMove={handlePointerMove}
-          className={`relative z-10 rounded-2xl cursor-pointer transition-opacity duration-700 touch-none ${isScratched ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+          className="relative z-10 rounded-2xl cursor-pointer touch-none"
         />
       </div>
 
-      {/* Level Completion */}
-      <AnimatePresence>
-        {isScratched && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="absolute inset-x-6 top-1/3 glass-panel-romantic rounded-3xl p-8 shadow-2xl z-30 max-w-md mx-auto"
-          >
-            <div className="text-6xl mb-3 animate-bounce">💌</div>
-            <h3 className="text-3xl font-serif italic text-gold-gradient mb-2">
-              Secret Unlocked!
-            </h3>
-            <p className="text-sm text-rose-100 font-light mb-6">
-              You scratched off the gold ticket! Love Slot Machine is now unlocked.
-            </p>
-
+      {/* Non-intrusive Action Button below the card */}
+      <div className="relative z-20 pb-6 min-h-[70px] flex items-center justify-center">
+        <AnimatePresence>
+          {isUnlocked ? (
             <motion.button
               type="button"
+              initial={{ opacity: 0, y: 15, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10 }}
               onClick={onComplete}
               className="px-10 py-4 rounded-full font-medium text-lg text-white bg-rose-500 hover:bg-rose-400 shadow-[0_0_35px_rgba(251,113,133,0.6)] transition-all focus-visible:ring-2 focus-visible:ring-rose-400"
               whileHover={{ scale: 1.05 }}
@@ -122,12 +113,12 @@ export default function GameScratchCard({ onComplete }) {
             >
               Play Game 4 &rarr;
             </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div className="relative z-10 text-xs text-rose-300/60 uppercase tracking-widest pb-4">
-        {isScratched ? "Level Complete" : `${scratchPercent}% Scratched`}
+          ) : (
+            <span className="text-xs text-rose-300/60 uppercase tracking-widest">
+              {scratchPercent}% Scratched (Keep rubbing!)
+            </span>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
